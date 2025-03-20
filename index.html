@@ -1,31 +1,148 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>Đăng nhập</title>
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; padding: 50px; }
-        form { display: inline-block; text-align: left; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #8A2BE2, #FF69B4);
+            transition: background 0.2s ease;
+        }
+
+        .login-container {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            text-align: center;
+            width: 380px;
+        }
+
+        .login-container h2 {
+            font-size: 26px;
+            color: #fff;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .login-container form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .login-container label {
+            text-align: left;
+            font-weight: bold;
+            color: white;
+            margin-top: 10px;
+        }
+
+        .login-container input {
+            width: 100%;
+            padding: 12px;
+            margin-top: 5px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            background: rgba(255, 255, 255, 0.3);
+            color: white;
+            outline: none;
+        }
+
+        .login-container input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .login-container button {
+            margin-top: 20px;
+            background: linear-gradient(135deg, #ff7eb3, #ff4d4d);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 10px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: 0.3s;
+            font-weight: bold;
+        }
+
+        .login-container button:hover {
+            transform: scale(1.05);
+            background: linear-gradient(135deg, #ff4d4d, #ff7eb3);
+        }
+
+        .sql-injection {
+            margin-top: 20px;
+            text-align: left;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 14px;
+            color: white;
+        }
+
+        .sql-injection p {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .sql-injection pre {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 14px;
+            color: #fff;
+            font-family: 'Courier New', monospace;
+        }
     </style>
 </head>
 <body>
-    <h2>Login</h2>
-    <form action="/login" method="POST">
-        <label for="username">Username:</label>
-        <input type="text" name="username" required><br><br>
+    <div class="login-container">
+        <h2>🔐 Đăng nhập</h2>
+        <form action="/login" method="POST">
+            <label for="username">Tên đăng nhập:</label>
+            <input type="text" name="username" placeholder="Nhập tên đăng nhập..." required>
 
-        <label for="password">Password:</label>
-        <input type="password" name="password" required><br><br>
+            <label for="password">Mật khẩu:</label>
+            <input type="password" name="password" placeholder="Nhập mật khẩu..." required>
 
-        <button type="submit">Login</button>
-    </form>
+            <button type="submit">🔥 Đăng nhập</button>
+        </form>
 
-    <h3>Try SQL Injection:</h3>
-    <p>Enter:</p>
-    <pre>
-        username: ' OR 1=1 --  
-        password: (any)
-    </pre>
+        <div class="sql-injection">
+            <p>⚠️ Thử SQL Injection:</p>
+            <p>Nhập:</p>
+            <pre>
+username: ' OR 1=1 --
+password: (bất kỳ)
+            </pre>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("mousemove", (event) => {
+            let x = event.clientX / window.innerWidth;
+            let y = event.clientY / window.innerHeight;
+
+            let r = Math.floor(255 * x);
+            let g = Math.floor(255 * y);
+            let b = Math.floor(255 * (1 - x));
+
+            document.body.style.background = `linear-gradient(135deg, rgb(${r}, ${g}, ${b}), rgb(${b}, ${r}, ${g}))`;
+        });
+    </script>
 </body>
 </html>
