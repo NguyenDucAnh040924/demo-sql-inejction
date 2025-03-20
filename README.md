@@ -19,8 +19,8 @@ node server.js
 
 <img width="641" alt="image" src="https://github.com/user-attachments/assets/b6774881-94b8-4cea-9c36-b95a2cac3ae2" /><br/>
 
-[^2]: Try username: <mark>user</mark>, password: <mark>password</mark><br/>
+[^2]: Try username: <mark>user, password: password<br/>
 <img width="640" alt="image" src="https://github.com/user-attachments/assets/5cfa9b19-03c3-47a0-b457-a756f809239a" /><br/>
 
-[^3]: Try username: <mark>admin' OR 1=1 -- </mark>, password: <mark>password</mark><br/>
+[^3]: Try username: <mark>admin' OR 1=1 --, password: <mark>password<br/>
 <img width="639" alt="image" src="https://github.com/user-attachments/assets/9de78002-c400-4470-88d8-3259dffe513b" /><br/>
