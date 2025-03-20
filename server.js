@@ -17,7 +17,7 @@ app.use(session({
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(__dirname));
 
-// Tạo bảng users và thêm dữ liệu
+// Create users table and insert data
 db.serialize(() => {
     db.run("CREATE TABLE users (id INTEGER PRIMARY KEY, username TEXT, password TEXT, role TEXT)");
     db.run("INSERT INTO users (username, password, role) VALUES ('admin', 'admin', 'admin')");
@@ -25,7 +25,7 @@ db.serialize(() => {
     db.run("INSERT INTO users (username, password, role) VALUES ('wibu', 'wibu', 'user')");
 });
 
-// Ghi log vào file attack_log.txt với timestamp định dạng "DD/MM/YYYY HH:mm:ss"
+// Log attack attempts to attack_log.txt with timestamp format "DD/MM/YYYY HH:mm:ss"
 function logAttack(ip, query, username) {
     const timestamp = new Date().toLocaleString("vi-VN", { timeZone: "Asia/Ho_Chi_Minh" });
 
@@ -35,12 +35,11 @@ Username: ${username}
 Query: ${query}
 -----------------------------\n`;
 
-    console.log(logMessage); // In ra console
-    fs.appendFileSync("attack_log.txt", logMessage); // Ghi vào file
+    console.log(logMessage); // Print to console
+    fs.appendFileSync("attack_log.txt", logMessage); // Write to file
 }
 
-
-// Kiểm tra input có dấu hiệu SQL Injection không (chỉ ghi log, không chặn)
+// Detect SQL Injection patterns (only logs, does not block)
 function detectSQLInjection(input, ip) {
     const pattern = /('|--|#|\/\*|\*\/|;|or |and )/i;
     if (pattern.test(input)) {
@@ -48,17 +47,17 @@ function detectSQLInjection(input, ip) {
     }
 }
 
-// Đăng nhập vẫn cho phép SQL Injection nhưng ghi log
+// Login (allows SQL Injection but logs attempts)
 app.post("/login", (req, res) => {
     const { username, password } = req.body;
     const userIP = req.ip;
 
-    // Kiểm tra và ghi log nếu có dấu hiệu SQL Injection
+    // Detect and log if SQL Injection is suspected
     detectSQLInjection(username, userIP);
     detectSQLInjection(password, userIP);
 
     const sql = `SELECT * FROM users WHERE username = '${username}' AND password = '${password}'`;
-    console.log("[DEBUG] Query chạy:", sql);
+    console.log("[DEBUG] Executed query:", sql);
 
     db.all(sql, [], (err, rows) => {
         if (rows.length > 0) {
@@ -67,23 +66,23 @@ app.post("/login", (req, res) => {
             if (rows[0].role === "admin") {
                 db.all("SELECT * FROM users WHERE role = 'admin'", [], (err, admins) => {
                     let adminList = admins.map(a => `🛡️ ${a.username}`).join("<br>");
-                    res.send(`<h1>Chào ${rows[0].username}!</h1>
-                              <p>🔐 Đây là danh sách admin:</p>
+                    res.send(`<h1>Welcome, ${rows[0].username}!</h1>
+                              <p>🔐 Here is the list of admins:</p>
                               <p>${adminList}</p>
-                              <a href='/logout'>Đăng xuất</a>`);
+                              <a href='/logout'>Logout</a>`);
                 });
             } else {
-                res.send(`<h1>Chào ${rows[0].username}!</h1>
-                          <p>🛠️ Bạn là user bình thường.</p>
-                          <a href='/logout'>Đăng xuất</a>`);
+                res.send(`<h1>Welcome, ${rows[0].username}!</h1>
+                          <p>🛠️ You are a regular user.</p>
+                          <a href='/logout'>Logout</a>`);
             }
         } else {
-            res.send("<h1>Sai tài khoản hoặc mật khẩu</h1><a href='/'>Thử lại</a>");
+            res.send("<h1>Incorrect username or password</h1><a href='/'>Try again</a>");
         }
     });
 });
 
-// Đăng xuất
+// Logout
 app.get("/logout", (req, res) => {
     req.session.destroy(() => {
         res.redirect("/");
@@ -91,5 +90,5 @@ app.get("/logout", (req, res) => {
 });
 
 app.listen(3000, () => {
-    console.log("Server chạy tại http://localhost:3000");
+    console.log("Server running at http://localhost:3000");
 });
